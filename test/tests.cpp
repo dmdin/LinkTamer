@@ -1,10 +1,18 @@
 
-#include "MyControllerTest.hpp"
+#include "oatpp-test/UnitTest.hpp"
+#include "oatpp/core/base/Environment.hpp"
+#include "UserControllerTest.hpp"
 
 #include <iostream>
 
+namespace {
+
 void runTests() {
-  OATPP_RUN_TEST(MyControllerTest);
+
+  OATPP_RUN_TEST(UserControllerTest);
+
+}
+
 }
 
 int main() {

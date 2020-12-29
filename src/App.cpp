@@ -1,35 +1,42 @@
-#include "./controller/MyController.hpp"
-#include "./AppComponent.hpp"
+
+#include "AppComponent.hpp"
+
+#include "controller/UserController.hpp"
+#include "controller/StaticController.hpp"
+
+#include "oatpp-swagger/Controller.hpp"
 
 #include "oatpp/network/Server.hpp"
 
 #include <iostream>
 
 void run() {
+  
+  AppComponent components; // Create scope Environment components
+  
+  /* create ApiControllers and add endpoints to router */
+  
+  auto router = components.httpRouter.getObject();
+  auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
 
-  /* Register Components in scope of run() method */
-  AppComponent components;
+  auto userController = UserController::createShared();
+  userController->addEndpointsToRouter(router);
+  
+  docEndpoints->pushBackAll(userController->getEndpoints());
+  
+  auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
+  swaggerController->addEndpointsToRouter(router);
 
-  /* Get router component */
-  OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router);
+  auto staticController = StaticController::createShared();
+  staticController->addEndpointsToRouter(router);
 
-  /* Create MyController and add all of its endpoints to router */
-  auto myController = std::make_shared<MyController>();
-  myController->addEndpointsToRouter(router);
-
-  /* Get connection handler component */
-  OATPP_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, connectionHandler);
-
-  /* Get connection provider component */
-  OATPP_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, connectionProvider);
-
-  /* Create server which takes provided TCP connections and passes them to HTTP connection handler */
-  oatpp::network::Server server(connectionProvider, connectionHandler);
-
-  /* Priny info about server port */
-  OATPP_LOGI("MyApp", "Server running on port %s", connectionProvider->getProperty("port").getData());
-
-  /* Run server */
+  /* create server */
+  
+  oatpp::network::Server server(components.serverConnectionProvider.getObject(),
+                                components.serverConnectionHandler.getObject());
+  
+  OATPP_LOGD("Server", "Running on port %s...", components.serverConnectionProvider.getObject()->getProperty("port").toString()->c_str());
+  
   server.run();
   
 }
@@ -40,7 +47,6 @@ void run() {
 int main(int argc, const char * argv[]) {
 
   oatpp::base::Environment::init();
-
   run();
   
   /* Print how much objects were created during app running, and what have left-probably leaked */

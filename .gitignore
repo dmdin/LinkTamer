@@ -33,14 +33,13 @@
 
 # custom build
 build/
-main/build/
 
 # idea
 .idea/
 cmake-build-debug/
+cmake-build-debug-visual-studio/
 */cmake-build-debug/
 
-#Mac
-
-**/.DS_Store
-
+# sqlite
+**/*.sqlite
+/.vs

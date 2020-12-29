@@ -1,8 +1,14 @@
+
 #ifndef AppComponent_hpp
 #define AppComponent_hpp
 
-#include "oatpp/web/server/HttpConnectionHandler.hpp"
+#include "SwaggerComponent.hpp"
+#include "DatabaseComponent.hpp"
 
+#include "ErrorHandler.hpp"
+
+#include "oatpp/web/server/HttpConnectionHandler.hpp"
+#include "oatpp/web/server/HttpRouter.hpp"
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
 
 #include "oatpp/parser/json/mapping/ObjectMapper.hpp"
@@ -15,6 +21,25 @@
  */
 class AppComponent {
 public:
+  
+  /**
+   *  Swagger component
+   */
+  SwaggerComponent swaggerComponent;
+
+  /**
+   * Database component
+   */
+  DatabaseComponent databaseComponent;
+
+  /**
+   * Create ObjectMapper component to serialize/deserialize DTOs in Contoller's API
+   */
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper)([] {
+    auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+    objectMapper->getDeserializer()->getConfig()->allowUnknownFields = false;
+    return objectMapper;
+  }());
   
   /**
    *  Create ConnectionProvider component which listens on the port
@@ -34,15 +59,14 @@ public:
    *  Create ConnectionHandler component which uses Router component to route requests
    */
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, serverConnectionHandler)([] {
+
     OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router); // get Router component
-    return oatpp::web::server::HttpConnectionHandler::createShared(router);
-  }());
-  
-  /**
-   *  Create ObjectMapper component to serialize/deserialize DTOs in Contoller's API
-   */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper)([] {
-    return oatpp::parser::json::mapping::ObjectMapper::createShared();
+    OATPP_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, objectMapper); // get ObjectMapper component
+
+    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
+    connectionHandler->setErrorHandler(std::make_shared<ErrorHandler>(objectMapper));
+    return connectionHandler;
+
   }());
 
 };

@@ -1,5 +1,5 @@
-#ifndef TestComponent_htpp
-#define TestComponent_htpp
+#ifndef TestComponent_hpp
+#define TestComponent_hpp
 
 #include "oatpp/web/server/HttpConnectionHandler.hpp"
 
@@ -11,11 +11,15 @@
 
 #include "oatpp/core/macro/component.hpp"
 
+#include "TestDatabaseComponent.hpp"
+
 /**
  * Test Components config
  */
 class TestComponent {
 public:
+
+  TestDatabaseComponent databaseComponent;
 
   /**
    * Create oatpp virtual network interface for test networking
@@ -44,8 +48,8 @@ public:
    *  Create Router component
    */
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, httpRouter)([] {
-    return oatpp::web::server::HttpRouter::createShared();
-  }());
+      return oatpp::web::server::HttpRouter::createShared();
+      }());
 
   /**
    *  Create ConnectionHandler component which uses Router component to route requests
@@ -65,4 +69,4 @@ public:
 };
 
 
-#endif // TestComponent_htpp
+#endif // TestComponent_hpp
