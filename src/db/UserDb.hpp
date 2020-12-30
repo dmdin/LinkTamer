@@ -7,9 +7,6 @@
 
 #include OATPP_CODEGEN_BEGIN(DbClient) //<- Begin Codegen
 
-/**
- * UserDb client definitions.
- */
 class UserDb : public oatpp::orm::DbClient {
 public:
 

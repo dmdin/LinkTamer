@@ -7,9 +7,6 @@
 
 #include OATPP_CODEGEN_BEGIN(DbClient) //<- Begin Codegen
 
-/**
- * UserDb client definitions.
- */
 class UrlDb : public oatpp::orm::DbClient {
 public:
 
@@ -50,4 +47,4 @@ public:
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen
 
-#endif //CRUD_USERDB_HPP
+#endif CRUD_URLDB_HPP
