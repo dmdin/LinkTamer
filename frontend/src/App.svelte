@@ -70,7 +70,7 @@
       <h2>Your history:</h2>
     {/if}
     <div class="history">
-      {#each $data as {url, shorten}}
+      {#each $data.reverse() as {url, shorten}}
           <p class="user-url">{url}</p>
           <p class="shorten-url">{shorten}</p>
           <CopyButton copyValue={shorten} size={40}/>
@@ -128,7 +128,7 @@
     border-radius: 10px;
     padding: 15px;
     height: 50px;
-    width: 40%;
+    width: 60%;
     max-width: 400px;
     outline: none;
     transition: all 0.7s ease;
@@ -145,6 +145,7 @@
 
   .submit-button {
     border-radius: 10px;
+    width: 100px;
     height: 50px;
     padding: 0.7em;
     transition: all 0.7s ease;
