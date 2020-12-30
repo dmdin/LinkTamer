@@ -3,6 +3,7 @@
 #define CRUD_DATABASECOMPONENT_HPP
 
 #include "db/UrlDb.hpp"
+//#include "db/UserDb.hpp"
 
 class DatabaseComponent {
 public:
@@ -15,7 +16,6 @@ public:
 
     /* Create database-specific ConnectionProvider */
     auto connectionProvider = std::make_shared<oatpp::sqlite::ConnectionProvider>(DATABASE_FILE);
-
     /* Create database-specific ConnectionPool */
     auto connectionPool = oatpp::sqlite::ConnectionPool::createShared(connectionProvider,
                                                                       10 /* max-connections */,
@@ -26,7 +26,7 @@ public:
 
     /* Create MyClient database client */
     return std::make_shared<UrlDb>(executor);
-
+//    return std::make_shared<UserDb>(executor);
   }());
 
 

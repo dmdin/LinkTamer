@@ -13,7 +13,7 @@ class UrlDto : public oatpp::DTO {
   DTO_FIELD(Int32, id);
   DTO_FIELD(String, url, "url");
   DTO_FIELD(String, shorten, "shorten");
-  DTO_FIELD(String, use_amount, "use_amount");
+  DTO_FIELD(Int32 , use_amount, "use_amount") = 0;
 };
 
 #include OATPP_CODEGEN_END(DTO)

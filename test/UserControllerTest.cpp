@@ -3,7 +3,7 @@
 #include "oatpp/web/client/HttpRequestExecutor.hpp"
 #include "oatpp-test/web/ClientServerTestRunner.hpp"
 
-#include "controller/UserController.hpp"
+#include "../UserController.hpp"
 
 #include "app/TestClient.hpp"
 #include "app/TestComponent.hpp"

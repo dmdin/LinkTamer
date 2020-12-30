@@ -14,5 +14,7 @@ CREATE TABLE AppUrl (
     id            INTEGER PRIMARY KEY,
     url           VARCHAR UNIQUE,
     shorten       VARCHAR UNIQUE,
-    use_amount    INTEGER DEFAULT=0,
+    use_amount    INTEGER DEFAULT 0,
 );
+
+-- INSERT INTO AppUrl (url, shorten) VALUES ('example.com', 'abc');

@@ -1,17 +1,15 @@
 
 #include "AppComponent.hpp"
 
-#include "controller/UserController.hpp"
+#include "../UserController.hpp"
 #include "controller/StaticController.hpp"
 
 #include "oatpp-swagger/Controller.hpp"
 
 #include "oatpp/network/Server.hpp"
 
-#include <iostream>
-
 void run() {
-  
+
   AppComponent components; // Create scope Environment components
   
   /* create ApiControllers and add endpoints to router */
