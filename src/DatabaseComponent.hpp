@@ -2,7 +2,8 @@
 #ifndef CRUD_DATABASECOMPONENT_HPP
 #define CRUD_DATABASECOMPONENT_HPP
 
-#include "db/UserDb.hpp"
+//#include "db/UserDb.hpp"
+#include "db/UrlDb.hpp"
 
 class DatabaseComponent {
 public:
@@ -10,7 +11,8 @@ public:
   /**
    * Create database client
    */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<UserDb>, userDb)([] {
+//  OATPP_CREATE_COMPONENT(std::shared_ptr<UserDb>, userDb)([] {
+  OATPP_CREATE_COMPONENT(std::shared_ptr<UrlDb>, UrlDb)([] {
 
     /* Create database-specific ConnectionProvider */
     auto connectionProvider = std::make_shared<oatpp::sqlite::ConnectionProvider>(DATABASE_FILE);
@@ -24,7 +26,7 @@ public:
     auto executor = std::make_shared<oatpp::sqlite::Executor>(connectionPool);
 
     /* Create MyClient database client */
-    return std::make_shared<UserDb>(executor);
+    return std::make_shared<UrlDb>(executor);
 
   }());
 
