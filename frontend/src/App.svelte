@@ -1,85 +1,200 @@
+<svelte:head>
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,400;0,800;1,800&display=swap"
+        rel="stylesheet">
+</svelte:head>
 
 <script>
+  import {fade, draw} from 'svelte/transition';
   import {writable} from 'svelte/store';
-  let saved = JSON.parse(localStorage.getItem('hist'));
-  let data = writable([] || saved);
-  data.subscribe(_ => localStorage.setItem('hist', JSON.stringify(data)))
+  import CopyButton from './CopyButton.svelte';
+
+  // let saved = [];
+  let saved = JSON.parse(localStorage.getItem('hist')) || [];
+  let data = writable(saved);
+  data.subscribe(_ => localStorage.setItem('hist', JSON.stringify($data)))
 
   let inputVal = '';
+  let tamed = null;
+  let hidden = true;
 
   function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
   }
 
-
-  async function handleClick(){
+  async function handleClick() {
     let val = inputVal;
-    if ('http' !== inputVal.slice(0, 4)){
+    if ('http' !== inputVal.slice(0, 4)) {
       val = 'https://' + val;
     }
-    if (validURL(val))
-      $data = $data.concat(val);
+    if (validURL(val)) {
+      tamed = "https://linktamer.io/abcdefg";
+      $data = $data.concat({url: val, shorten: tamed});
+    } else {
+      hidden = false;
+      setTimeout(() => hidden = true, 2000);
+    }
   }
 
-  async function handleEnter(event){
-    if (event.key === 'Enter'){
+  async function handleEnter(event) {
+    if (event.key === 'Enter') {
       await handleClick();
     }
   }
+
 </script>
 
 <svelte:window on:keydown={handleEnter}/>
 <main>
-  <h1>LinkTamer</h1>
-  <input bind:value={inputVal} placeholder="https://yourlink.com">
-  <button on:click={handleClick}>Tame!</button>
-  <div>
-    {#each $data as el}
-        <div>{el}</div>
-    {/each}
+  <div class="centered-card">
+    <h2 class:hidden class="error">Enter the link!</h2>
+    <h1 class="title">Link<i>Tamer</i></h1>
+    <p class="description">The <u>fastest</u> way to tame your URL</p>
+    <input bind:value={inputVal} placeholder="https://yourlink.com">
+    <button class="submit-button" on:click={handleClick}>Tame!</button>
+    {#if tamed}
+      <div class="new-link" transition:fade>
+        <p>{tamed}</p>
+        <CopyButton copyValue={tamed}/>
+      </div>
+    {/if}
+    {#if ($data.length > 0)}
+      <hr>
+      <h2>Your history:</h2>
+    {/if}
+    <div class="history">
+      {#each $data as {url, shorten}}
+          <p class="user-url">{url}</p>
+          <p class="shorten-url">{shorten}</p>
+          <CopyButton copyValue={shorten} size={40}/>
+      {/each}
+    </div>
   </div>
 </main>
 
 <style>
-  main {
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
+  .hidden {
+    opacity: 0;
   }
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
+  main {
+    text-align: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 99vh;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    font-family: Raleway, sans-serif;
+    color: #212738;
+  }
+
+  .title {
+    font-weight: 800;
     font-size: 4em;
-    font-weight: 100;
+    padding: 0;
+    margin: 0;
+  }
+
+  .error {
+    color: crimson;
+    transition: opacity 1s ease;
+  }
+
+  .description {
+    font-size: 1.5em;
+  }
+
+  i {
+    color: #F97068;
+    text-shadow: 0 0 10px rgba(252, 180, 177, 0.9);
+  }
+
+  .centered-card {
+    width: 80%;
+    min-width: 300px;
+    height: 600px;
   }
 
   input {
     border: 1px solid #cccccc;
-    border-radius: 1.5em;
+    border-radius: 10px;
     padding: 15px;
-    width: 40vw;
+    height: 50px;
+    width: 40%;
     max-width: 400px;
-    outline:none;
+    outline: none;
     transition: all 0.7s ease;
   }
+
   input:focus {
-    border-color: #666666;
+    border-color: #212738;
+  }
+
+  .new-link {
+    display: flex;
+    justify-content: center;
+  }
+
+  .submit-button {
+    border-radius: 10px;
+    height: 50px;
+    padding: 0.7em;
+    transition: all 0.7s ease;
+    background: #F97068;
+    border: 1px solid #F97068;
+    color: #f4f4f4;
+  }
+
+  .submit-button:hover {
+    background: white;
+    color: #F97068;
+    box-shadow: 0 0 5px 2px rgba(252, 180, 177, 0.9);
+  }
+
+  hr {
+    margin: 50px auto;
+    color: #212738;
+    width: 50%;
+    max-width: 700px;
+    min-width: 400px;
+  }
+
+  .history {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 30px;
+    /*place-content: center;*/
+    align-items: stretch;
+    max-width: 800px;
+  }
+
+  .user-url {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   @media (max-width: 640px) {
-    main {
-      max-width: none;
-    }
     input {
       width: 200px;
+    }
+    hr {
+      width: 90%;
+      min-width: 300px;
+    }
+    .history {
+      grid-template-columns: 1fr 30px;
+    }
+    .shorten-url{
+      display: none;
     }
   }
 </style>
