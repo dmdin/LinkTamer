@@ -20,7 +20,6 @@ oatpp::Object<UrlDto> UrlService::updateAmount(const oatpp::Object<UrlDto>& dto)
 }
 
 oatpp::Object<UrlDto> UrlService::getUrlById(const oatpp::Int32& id, const std::shared_ptr<oatpp::orm::Connection>& connection) {
-
   auto dbResult = m_database->getUrlById(id, connection);
   OATPP_ASSERT_HTTP(dbResult->isSuccess(), Status::CODE_500, dbResult->getErrorMessage());
   OATPP_ASSERT_HTTP(dbResult->hasMoreToFetch(), Status::CODE_404, "Url not found");

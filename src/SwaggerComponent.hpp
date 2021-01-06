@@ -21,11 +21,11 @@ public:
     oatpp::swagger::DocumentInfo::Builder builder;
     
     builder
-    .setTitle("User entity service")
-    .setDescription("CRUD API Example project with swagger docs")
+    .setTitle("LinkTamer service")
+    .setDescription("The service, that makes URLs shorter")
     .setVersion("1.0")
-    .setContactName("Ivan Ovsyanochka")
-    .setContactUrl("https://oatpp.io/")
+    .setContactName("Dmitriy Din")
+    .setContactUrl("https://github.com/Dikower")
     
     .setLicenseName("Apache License, Version 2.0")
     .setLicenseUrl("http://www.apache.org/licenses/LICENSE-2.0")

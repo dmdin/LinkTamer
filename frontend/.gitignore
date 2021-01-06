@@ -1,8 +1,2 @@
-/node_modules/
-/public/build/
 .yarn/
-
-.DS_Store
-.pnp.js
-.yarnrc.yml
-yarn.lock
+node_modules/

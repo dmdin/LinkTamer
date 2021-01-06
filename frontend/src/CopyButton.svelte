@@ -47,10 +47,6 @@
     margin: 0;
   }
 
-  .hidden {
-    opacity: 1;
-  }
-
   button {
     width: 100%;
     height: 100%;

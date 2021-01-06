@@ -11,6 +11,8 @@
   import CopyButton from './CopyButton.svelte';
 
   // let saved = [];
+  const apiUrl = "http://localhost:8000/";
+
   let saved = JSON.parse(localStorage.getItem('hist')) || [];
   let data = writable(saved);
   data.subscribe(_ => localStorage.setItem('hist', JSON.stringify($data)))
@@ -18,6 +20,16 @@
   let inputVal = '';
   let tamed = null;
   let hidden = true;
+
+  function makeRandom(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
 
   function validURL(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
@@ -37,6 +49,15 @@
     if (validURL(val)) {
       tamed = "https://linktamer.io/abcdefg";
       $data = $data.concat({url: val, shorten: tamed});
+      let r = makeRandom(5);
+      let resp = await fetch(apiUrl + 'url', {
+        method: 'POST',
+        body: JSON.stringify({
+          "url": r,
+          "shorten": r,
+        }),
+      }).then(res => res.json());
+      console.log(JSON.stringify(resp));
     } else {
       hidden = false;
       setTimeout(() => hidden = true, 2000);

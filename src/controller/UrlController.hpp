@@ -39,6 +39,7 @@ public:
     info->addResponse < Object < StatusDto >> (Status::CODE_500, "application/json");
   }
 
+  ADD_CORS(createUrl)
   ENDPOINT("POST", "url", createUrl,
            BODY_DTO(Object < UrlDto > , urlDto)) {
     return createDtoResponse(Status::CODE_200, m_urlService.createUrl(urlDto));
@@ -54,11 +55,13 @@ public:
     info->pathParams["UrlId"].description = "Url Identifier";
   }
 
-  ENDPOINT("GET", "url/{urlId}", getUrlById, PATH(Int32, urlId),
-           BODY_DTO(Object < UrlDto > , urlDto)) {
+  ADD_CORS(getUrlById)
+  ENDPOINT("GET", "url/{urlId}", getUrlById,
+           PATH(Int32, urlId)) {
     return createDtoResponse(Status::CODE_200, m_urlService.getUrlById(urlId));
   }
 
+  ADD_CORS(getByShorten)
   ENDPOINT_INFO(getByShorten) {
     info->summary = "Get one Url by Shorten";
 
@@ -78,3 +81,4 @@ public:
 #include OATPP_CODEGEN_BEGIN(ApiController) //<- End Codegen
 
 #endif /* UserController_hpp */
+
