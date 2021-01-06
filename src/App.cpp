@@ -1,7 +1,7 @@
 
 #include "AppComponent.hpp"
 
-#include "../UserController.hpp"
+#include "controller/UrlController.hpp"
 #include "controller/StaticController.hpp"
 
 #include "oatpp-swagger/Controller.hpp"
@@ -17,10 +17,10 @@ void run() {
   auto router = components.httpRouter.getObject();
   auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
 
-  auto userController = UserController::createShared();
-  userController->addEndpointsToRouter(router);
+  auto urlController = UrlController::createShared();
+  urlController->addEndpointsToRouter(router);
   
-  docEndpoints->pushBackAll(userController->getEndpoints());
+  docEndpoints->pushBackAll(urlController->getEndpoints());
   
   auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
   swaggerController->addEndpointsToRouter(router);

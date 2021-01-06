@@ -5,13 +5,13 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_library(crud-lib
         src/controller/StaticController.hpp
-        UserController.hpp
-        src/db/UserDb.hpp
-        src/dto/PageDto.hpp
+        src/controller/UrlController.hpp
+        src/db/UrlDb.hpp
+#        src/dto/PageDto.hpp
         src/dto/StatusDto.hpp
-        src/dto/UserDto.hpp
-        src/service/UserService.cpp
-        src/service/UserService.hpp
+        src/dto/UrlDto.hpp
+        src/service/UrlService.cpp
+        src/service/UrlService.hpp
         src/AppComponent.hpp
         src/DatabaseComponent.hpp
         src/SwaggerComponent.hpp
@@ -36,7 +36,7 @@ target_link_libraries(crud-lib
         PUBLIC oatpp::oatpp-swagger
         PUBLIC unofficial::sqlite3::sqlite3
         PUBLIC oatpp::oatpp-sqlite
-)
+        )
 
 # If CMake can't find SQLite3:
 #
@@ -73,14 +73,14 @@ endif()
 add_executable(crud-exe src/App.cpp)
 target_link_libraries(crud-exe crud-lib)
 
-add_executable(crud-test
-        test/tests.cpp
-        test/app/TestClient.hpp
-        test/app/TestDatabaseComponent.hpp
-        test/app/TestComponent.hpp
-        test/UserControllerTest.hpp
-        test/UserControllerTest.cpp)
-target_link_libraries(crud-test crud-lib)
-
-enable_testing()
-add_test(project-tests crud-test)
+#add_executable(crud-test
+#        test/tests.cpp
+#        test/app/TestClient.hpp
+#        test/app/TestDatabaseComponent.hpp
+#        test/app/TestComponent.hpp
+#        test/UserControllerTest.hpp
+#        test/UserControllerTest.cpp)
+#target_link_libraries(crud-test crud-lib)
+#
+#enable_testing()
+#add_test(project-tests crud-test)
