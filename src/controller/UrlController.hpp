@@ -56,7 +56,7 @@ public:
   }
 
   ADD_CORS(getUrlById)
-  ENDPOINT("GET", "url/{urlId}", getUrlById,
+  ENDPOINT("GET", "urlId/{urlId}", getUrlById,
            PATH(Int32, urlId)) {
     return createDtoResponse(Status::CODE_200, m_urlService.getUrlById(urlId));
   }
@@ -72,7 +72,7 @@ public:
     info->pathParams["UrlId"].description = "Url Identifier";
   }
 
-  ENDPOINT("GET", "u/{shorten}", getByShorten,
+  ENDPOINT("GET", "url/{shorten}", getByShorten,
            PATH(String, shorten)) {
     return createDtoResponse(Status::CODE_200, m_urlService.getByShorten(shorten));
   }
