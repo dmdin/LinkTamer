@@ -14,8 +14,8 @@ cd tmp
 ##########################################################
 ## install oatpp module
 
-function install_module () {
-
+install_module()
+{
 BUILD_TYPE=$1
 MODULE_NAME=$2
 NPROC=$(nproc)

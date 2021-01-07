@@ -28,13 +28,13 @@ target_include_directories(crud-lib PUBLIC src)
 find_package(oatpp         REQUIRED)
 find_package(oatpp-swagger REQUIRED)
 find_package(oatpp-sqlite  REQUIRED)
-find_package(unofficial-sqlite3 CONFIG REQUIRED)
+#find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
 target_link_libraries(crud-lib
         # Oat++
         PUBLIC oatpp::oatpp
         PUBLIC oatpp::oatpp-swagger
-        PUBLIC unofficial::sqlite3::sqlite3
+#        PUBLIC unofficial::sqlite3::sqlite3
         PUBLIC oatpp::oatpp-sqlite
         )
 
