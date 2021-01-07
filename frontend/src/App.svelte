@@ -20,19 +20,22 @@
   let inputVal = '';
   let tamed = null;
   let hidden = true;
+  if (window.location.pathname !== '/') {
+    console.log(window.location.pathname);
+  }
 
   function makeRandom(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
   }
 
   function validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+    let pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
         '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
         '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
@@ -92,9 +95,9 @@
     {/if}
     <div class="history">
       {#each $data.reverse() as {url, shorten}}
-          <p class="user-url">{url}</p>
-          <p class="shorten-url">{shorten}</p>
-          <CopyButton copyValue={shorten} size={40}/>
+        <p class="user-url">{url}</p>
+        <p class="shorten-url">{shorten}</p>
+        <CopyButton copyValue={shorten} size={40}/>
       {/each}
     </div>
   </div>
@@ -208,14 +211,23 @@
     input {
       width: 200px;
     }
+
     hr {
       width: 90%;
       min-width: 300px;
     }
-    .history {
-      grid-template-columns: 1fr 30px;
+
+    .submit-button {
+      width: 70px;
     }
-    .shorten-url{
+
+    .history {
+      grid-template-columns: 60% 40%;
+      /*place-content: center;*/
+      place-items: center;
+    }
+
+    .shorten-url {
       display: none;
     }
   }

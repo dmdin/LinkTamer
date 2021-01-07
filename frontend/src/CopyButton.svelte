@@ -15,7 +15,7 @@
   }
 </script>
 
-<input bind:this={inputElement} value={copyValue}>
+<input bind:this={inputElement} value={copyValue} readonly>
 <div class="component" style="width: {size}px; height: {size}px">
   {#if !hidden}
     <div in:fade={{duration: 200}} out:fly={{y: -10, duration: 700}} class="label">
