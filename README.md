@@ -66,6 +66,6 @@ $: vcpkg install oatpp-swagger
 В консоли отобразится подсказка. В дальнейшем нужно использовать переменную -DCMAKE_TOOLCHAIN_FILE с местом разположения установленных библиотек при сборке проекта. 
 
 ## 🎉 Результат
-Frontend: http://linktamer.xyz
-Backend:  http://linktamer.xyz:8000
-Swagger:  http://linktamer.xyz:8000/swagger/ui
+- Frontend: http://linktamer.xyz
+- Backend:  http://linktamer.xyz:8000
+- Swagger:  http://linktamer.xyz:8000/swagger/ui
