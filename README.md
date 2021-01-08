@@ -69,3 +69,7 @@ $: vcpkg integrate install
 - Frontend: http://linktamer.xyz
 - Backend:  http://linktamer.xyz:8000
 - Swagger:  http://linktamer.xyz:8000/swagger/ui
+
+## 📋 TODO
+1. Добавить Traefik для поддержки https подключений
+2. Оптимизировать backend контейнер
