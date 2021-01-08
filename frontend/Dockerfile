@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:14-alpine as build
 
 WORKDIR /usr/src/app
 
@@ -12,8 +12,8 @@ COPY ./public ./public
 
 RUN npm run-script build
 
-EXPOSE 5000
 
-ENV HOST=0.0.0.0
-
-CMD [ "npm", "start" ]
+FROM nginx:stable-alpine
+COPY --from=build /usr/src/app/public /usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

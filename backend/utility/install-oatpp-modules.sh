@@ -3,7 +3,7 @@
 BUILD_TYPE=$1
 
 if [ -z "$BUILD_TYPE" ]; then
-    BUILD_TYPE="Debug"
+  BUILD_TYPE="Debug"
 fi
 
 rm -rf tmp
@@ -14,14 +14,14 @@ cd tmp
 ##########################################################
 ## install oatpp module
 
-install_module()
+function install_module()
 {
-BUILD_TYPE=$1
+  BUILD_TYPE=$1
 MODULE_NAME=$2
 NPROC=$(nproc)
 
 if [ -z "$NPROC" ]; then
-    NPROC=1
+  NPROC=1
 fi
 
 echo "\n\nINSTALLING MODULE '$MODULE_NAME' ($BUILD_TYPE) using $NPROC threads ...\n\n"
@@ -37,11 +37,9 @@ cd build
 ############################################################################
 cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOATPP_BUILD_TESTS=OFF -DOATPP_SQLITE_AMALGAMATION=ON ..
 make install -j $NPROC
-
 cd ../../
 
 }
-
 ##########################################################
 
 install_module $BUILD_TYPE oatpp

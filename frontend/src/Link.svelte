@@ -18,6 +18,7 @@
 
 <main>
 {#await redirected}
+  <h1>Loading...</h1>
 {:then is}
   {#if is}
     <h1>Redirecting...</h1>
