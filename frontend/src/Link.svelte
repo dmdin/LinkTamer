@@ -21,7 +21,7 @@
   <h1>Loading...</h1>
 {:then is}
   {#if is}
-    <h1>Redirecting...</h1>
+    <h1 class="redirect">Redirecting...</h1>
   {:else}
     <div>
       <h1>404</h1>
@@ -60,6 +60,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  @media (max-width: 640px) {
+    .redirect {
+      font-size: 20px;
+    }
   }
 
 </style>
