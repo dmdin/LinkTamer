@@ -39,9 +39,17 @@
   async function handleClick() {
     let val = inputVal;
     if ('http' !== inputVal.slice(0, 4)) {
-      val = 'https://' + val;
+      val = 'http://' + val;
     }
+
     if (validURL(val)) {
+      for (let {url, shorten} of $data){
+        if (url === val){
+          tamed = shorten;
+          return true;
+        }
+      }
+
       let r = makeRandom(5);
       let resp = await fetch(apiUrl + 'url', {
         method: 'POST',
@@ -49,12 +57,14 @@
           "url": val,
           "shorten": r,
         }),
-      }).then(res => res.json());
+      }).then(res => res.json()).catch(_ => handleClick());
       tamed = selfUrl + '#/' + r;
       $data = $data.concat({url: val, shorten: tamed});
+      return true;
     } else {
       hidden = false;
       setTimeout(() => hidden = true, 2000);
+      return false;
     }
   }
 
@@ -220,6 +230,10 @@
 
     .shorten-url {
       display: none;
+    }
+
+    .user-url {
+      width: 100%;
     }
   }
 </style>
