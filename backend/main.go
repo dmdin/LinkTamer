@@ -1,26 +1,38 @@
 package main
 
 import (
+	"fmt"
+	"github.com/Dikower/LinkTamer/backend/database"
+	"github.com/Dikower/LinkTamer/backend/link"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/jinzhu/gorm"
 )
+
+func setupRoutes(app *fiber.App) {
+	app.Get("/", link.New)
+	//app.Get("/", link.GetAll)
+}
+
+func initDatabase() {
+	var err error
+	database.DBConn, err = gorm.Open("sqlite3", "links.db")
+	if err != nil {
+		panic("failed to connect database")
+	}
+	fmt.Println("Connection Opened to Database")
+
+}
 
 func main() {
 	app := fiber.New()
-
 	app.Use(logger.New())
-	// give response when at /
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"success": true,
-			"message": "You are at the endpoint 😉",
-		})
-	})
-
-	// Listen on server 8000 and catch error if any
+	initDatabase()
+	database.DBConn.AutoMigrate(&link.Link{})
+	fmt.Println("Database Migrated")
+	setupRoutes(app)
 	err := app.Listen(":8000")
 
-	// handle error
 	if err != nil {
 		panic(err)
 	}
