@@ -4,7 +4,7 @@
 
   async function get() {
     let error = false;
-    let resp = await fetch(apiUrl + 'url' + $location).catch(() => error = true);
+    let resp = await fetch(apiUrl + 'get' + $location).catch(() => error = true);
     if (!error) {
       resp = await resp.json();
       window.location.replace(resp.url);

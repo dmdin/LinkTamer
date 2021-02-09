@@ -3,9 +3,9 @@
   import {writable} from 'svelte/store';
   import CopyButton from './CopyButton.svelte';
   import {apiUrl, selfUrl} from './shared';
-  // let saved = [];
+  let saved = [];
 
-  let saved = JSON.parse(localStorage.getItem('hist')) || [];
+  // let saved = JSON.parse(localStorage.getItem('hist')) || [];
   let data = writable(saved);
   data.subscribe(_ => localStorage.setItem('hist', JSON.stringify($data)))
 
@@ -14,16 +14,6 @@
   let hidden = true;
   if (window.location.pathname !== '/') {
     console.log(window.location.pathname);
-  }
-
-  function makeRandom(length) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   }
 
   function validURL(str) {
@@ -37,29 +27,27 @@
   }
 
   async function handleClick() {
-    let val = inputVal;
+    let url = inputVal;
     if ('http' !== inputVal.slice(0, 4)) {
-      val = 'http://' + val;
+      url = 'http://' + url;
     }
 
-    if (validURL(val)) {
-      for (let {url, shorten} of $data){
-        if (url === val){
+    if (validURL(url)) {
+      for (let {savedUrl, shorten} of $data){
+        if (savedUrl === url){
           tamed = shorten;
           return true;
         }
       }
-
-      let r = makeRandom(5);
-      let resp = await fetch(apiUrl + 'url', {
+      let resp = await fetch(apiUrl + 'new', {
+        headers: {
+          'Content-Type': 'application/json'
+        },
         method: 'POST',
-        body: JSON.stringify({
-          "url": val,
-          "shorten": r,
-        }),
-      }).then(res => res.json()).catch(_ => handleClick());
-      tamed = selfUrl + '#/' + r;
-      $data = $data.concat({url: val, shorten: tamed});
+        body: JSON.stringify({url}),
+      }).then(res => res.json())//.catch(_ => console.log("Fetch error"));
+      console.log(JSON.stringify({url}))
+      $data = $data.concat({url, "shorten": selfUrl + '#/' + resp.shorten});
       return true;
     } else {
       hidden = false;
