@@ -39,7 +39,8 @@
           return true;
         }
       }
-      let resp = await fetch(apiUrl + 'new', {
+      console.log($apiUrl)
+      let resp = await fetch($apiUrl + 'new', {
         headers: {
           'Content-Type': 'application/json'
         },
@@ -47,7 +48,7 @@
         body: JSON.stringify({url}),
       }).then(res => res.json())//.catch(_ => console.log("Fetch error"));
       console.log(JSON.stringify({url}))
-      $data = $data.concat({url, "shorten": selfUrl + '#/' + resp.shorten});
+      $data = $data.concat({url, "shorten": $selfUrl + '#/' + resp.shorten});
       return true;
     } else {
       hidden = false;
@@ -70,8 +71,10 @@
     <h2 class:hidden class="error">Enter the link!</h2>
     <h1 class="title">Link<i>Tamer</i></h1>
     <p class="description">The <u>fastest</u> way to tame your URL</p>
-    <input bind:value={inputVal} placeholder="https://yourlink.com">
-    <button class="submit-button" on:click={handleClick}>Tame!</button>
+    <label>
+      <input bind:value={inputVal} placeholder="https://yourlink.com">
+      <button class="submit-button" on:click={handleClick}>Tame!</button>
+    </label>
     {#if tamed}
       <div class="new-link" transition:fade>
         <p>{tamed}</p>

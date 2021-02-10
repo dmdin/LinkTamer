@@ -1,0 +1,62 @@
+api:
+  dashboard: true
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+
+providers:
+  docker:
+    exposedByDefault: false
+
+http:
+  routers:
+    frontend:
+      entrypoints: ["https", "http"]
+      rule: "Host(linktamer.xyz)"
+      tls:
+        certResolver: "letsEncrypt"
+
+    backend:
+      entrypoints: ["https", "http"]
+      rule: "Host(`backend.linktamer.xyz`)"
+      tls:
+        certResolver: "letsEncrypt"
+
+    traefik:
+      entrypoints: ["https", "http"]
+      rule: "Host(traefik.linktamer.xyz)"
+      middlewares:
+        - "simpleAuth"
+        - "redirect-to-https"
+      tls:
+        certResolver: "letsEncrypt"
+
+#    http-catchall:
+#      rule: HostRegexp(`{host:.+}`)
+#      entrypoints:
+#        - http
+#      middlewares:
+#        - redirect-to-https
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: "https"
+        permanent: true
+    traefik-auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$oHMAWKos$ePX3wkoqhbtjDWQBQrpd3/"
+
+
+certificatesResolvers:
+  letsEncrypt:
+    acme:
+      email: "dmitriy1d01@gmail.com"
+      storage: "acme.json"
+#      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: "http"

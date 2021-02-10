@@ -1,5 +1,12 @@
-export const apiUrl = "http://linktamer.xyz:8000/";
-export const selfUrl = "http://linktamer.xyz/";
+import {writable} from "svelte/store";
 
-// export const apiUrl = "http://localhost:8000/";
-// export const selfUrl = "http://localhost:5000/";
+export const apiUrl = writable();
+export const selfUrl = writable();
+
+if (process.env.isProd) {
+    apiUrl.set("https://backend.linktamer.xyz/");
+    selfUrl.set("https://linktamer.xyz/");
+} else {
+    apiUrl.set("http://localhost:8000/");
+    selfUrl.set("http://localhost:5000/");
+}

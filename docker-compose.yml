@@ -1,10 +1,58 @@
-version: "3"
+version: '3'
 services:
   frontend:
     build: "./frontend"
+    restart: "on-failure"
     ports:
-    - "80:80"
+      - "5000:5000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.entrypoints=https"
+      - "traefik.http.routers.front.rule=Host(`linktamer.xyz`)"
+      - "traefik.http.routers.front.tls=true"
+      - "traefik.http.routers.front.tls.certresolver=letsEncrypt"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
+
   backend:
     build: "./backend"
+    restart: "on-failure"
     ports:
-    - "8000:8000"
+      - "8000:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.entrypoints=https"
+      - "traefik.http.routers.backend.rule=Host(`backend.linktamer.xyz`)"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.tls.certresolver=letsEncrypt"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  traefik:
+    image: traefik:v2.2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/acme.json:/acme.json:ro
+
+    labels:
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.linktamer.xyz`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8001"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$apr1$oHMAWKos$ePX3wkoqhbtjDWQBQrpd3/"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)"
+      - "traefik.http.routers.http_catchall.entrypoints=http"
+      - "traefik.http.routers.http_catchall.middlewares=https_redirect"
